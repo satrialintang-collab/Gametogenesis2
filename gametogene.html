@@ -1,0 +1,181 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Misi Gametogenesis • Kelompok 5 XI-F</title>
+<style>
+:root{--bg:#0b1226;--cd:#16213f;--fg:#e8f1ff;--mu:#9fb3d9;--ac:#4fc3f7;--pk:#ff8fb1;--ok:#3ddc84;--no:#ff5c7a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1226;--cd:#16213f;--fg:#e8f1ff}}
+:root[data-theme="dark"]{--bg:#0b1226;--cd:#16213f;--fg:#e8f1ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;line-height:1.4}
+#app{max-width:640px;margin:0 auto;padding:12px 14px 40px}
+.top{display:flex;justify-content:space-between;padding:6px 0 10px;color:var(--mu);font-size:14px}
+h1{margin:12px 0 4px;font-size:28px}h2{font-size:20px;margin:14px 0 8px}
+.s{color:var(--mu);margin:2px 0 14px}
+.g{display:grid;gap:10px}
+button{font:inherit;color:var(--fg);cursor:pointer}
+.c{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;text-align:left;background:var(--cd);border:2px solid #24345f;border-radius:14px;padding:14px}
+.c i{grid-row:span 2;font-size:32px;font-style:normal;align-self:center}
+.c small{color:var(--mu)}
+.o{display:block;width:100%;text-align:left;background:var(--cd);border:2px solid #24345f;border-radius:12px;padding:12px;margin:8px 0;font-size:16px}
+.o:disabled{opacity:1;cursor:default}
+.o.good,.ch.good{border-color:var(--ok);background:#12382a}
+.o.bad,.ch.bad{border-color:var(--no);background:#40182a}
+.o.sel{border-color:var(--ac);background:#143454}
+.n{display:block;width:100%;background:var(--ac);color:#021;border:0;border-radius:12px;padding:13px;font-weight:700;font-size:16px;margin:10px 0}
+.n:disabled{opacity:.4}
+.bar{display:flex;justify-content:space-between;color:var(--mu);font-size:14px}
+.fb{padding:10px 12px;border-radius:10px;background:var(--cd);margin:10px 0 0;border-left:4px solid}
+.fb.good{border-color:var(--ok)}.fb.bad{border-color:var(--no)}
+small{opacity:.75;font-size:13px}
+.sl{list-style:none;margin:8px 0;padding:0}
+.sl li{margin:6px 0;padding:11px 12px;border-radius:12px;border:2px dashed #24345f;min-height:46px}
+.sl li.ch{border:2px solid var(--ac);background:var(--cd);cursor:pointer}
+.sl li.em{color:var(--mu)}
+.mc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mc .o{font-size:14px;padding:10px}
+.back{background:none;border:0;color:var(--mu);padding:0;font-size:14px}
+.gv{position:relative;border-radius:16px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#1d3566,#0a1020);touch-action:none}
+.gv canvas{width:100%;display:block;aspect-ratio:4/3;cursor:grab}
+.bo{position:absolute;top:12px;left:0;right:0;text-align:center;font-weight:800;font-size:24px;opacity:0;pointer-events:none}
+.bo.go{animation:pop 1s}
+@keyframes pop{0%{opacity:1;transform:scale(.6)}30%{transform:scale(1.2)}100%{opacity:0;transform:translateY(-16px)}}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.chip{flex:none;border-radius:20px;padding:8px 12px;background:var(--cd);border:2px solid #24345f;font-size:14px}
+.chip.on{border-color:var(--ac);background:#143454}
+.card{background:var(--cd);border-radius:14px;padding:12px 14px}
+.tag{display:inline-block;background:#143454;border-radius:12px;padding:3px 10px;margin:0 6px 6px 0;font-size:13px}
+.tg{display:block;margin:10px 0}
+details{background:var(--cd);border-radius:12px;margin:8px 0;padding:10px 12px}
+summary{font-weight:700;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+th,td{border:1px solid #24345f;padding:6px;text-align:left}
+</style></head><body><div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),sh=a=>[...a].sort(()=>Math.random()-.5);
+let xp=0,best=0;try{best=+localStorage.getItem('gb')||0}catch(e){}
+const add=p=>{xp+=p;if(xp>best){best=xp;try{localStorage.setItem('gb',best)}catch(e){}}};
+const H=h=>{$('#app').innerHTML=h;window.scrollTo(0,0)};
+const hdr=()=>`<div class=top><button class=back onclick=home()>‹ Menu</button><span>⭐ ${xp} · 🏆 ${best}</span></div>`;
+function home(){H(`<div class=top><b>🧬 Misi Gametogenesis • Kelompok 5 Biologi XI-F</b><span>⭐ ${xp} · 🏆 ${best}</span></div><h1>Belajar Gametogenesis</h1><p class=s>Pilih misi, kumpulkan bintang, dan kuasai spermatogenesis, oogenesis, dan fertilisasi.</p><div class=g>
+<button class=c onclick=gal()><i>🔬</i><b>Galeri Sel 3D</b><small>Baca dan putar sel secara 3D, lucu dan interaktif</small></button>
+<button class=c onclick=quiz()><i>❓</i><b>Kuis Cepat</b><small>10 soal, 3 nyawa, bonus streak</small></button>
+<button class=c onclick=order()><i>🔢</i><b>Susun Tahapan</b><small>Urutkan sel dari induk sampai gamet</small></button>
+<button class=c onclick=match()><i>🔗</i><b>Jodohkan Istilah</b><small>Pasangkan istilah dan fungsinya</small></button></div>`)}
+function endScr(t,m,again){H(hdr()+`<h1>${t}</h1><p class=s>${m}</p><button class=n onclick="${again}">Main lagi</button><button class="o" onclick=home()>Menu utama</button>`)}
+
+/* ---- KUIS ---- */
+const Q=[
+["Apa tujuan utama gametogenesis?","Menghasilkan gamet haploid yang siap untuk fertilisasi",["Menghasilkan sel tubuh diploid","Memperbanyak sel kulit","Membentuk zigot secara langsung"],"Gametogenesis membentuk dan mematangkan gamet (sel reproduksi) yang haploid."],
+["Berapa jumlah kromosom sel tubuh manusia?","46",["23","44","92"],"Sel tubuh manusia bersifat diploid (2n) dengan 46 kromosom."],
+["Berapa jumlah kromosom gamet manusia?","23",["46","12","92"],"Gamet bersifat haploid (n) dengan 23 kromosom."],
+["Pembelahan yang mengurangi jumlah kromosom menjadi separuh adalah ...","Meiosis",["Mitosis","Amitosis","Fertilisasi"],"Meiosis mengubah sel diploid menjadi sel haploid."],
+["Spermatogenesis berlangsung di ...","Tubulus seminiferus pada testis",["Folikel pada ovarium","Tuba falopi","Epididimis saja"],"Sel-sel sperma terbentuk di tubulus seminiferus di dalam testis."],
+["Satu spermatogonium akhirnya menghasilkan ...","4 spermatozoa fungsional",["1 spermatozoa fungsional","2 spermatozoa fungsional","8 spermatozoa fungsional"],"Meiosis I menghasilkan 2 sel, meiosis II menghasilkan 4 spermatid, lalu matang menjadi 4 spermatozoa."],
+["Satu oogonium akhirnya menghasilkan ...","1 ovum fungsional",["4 ovum fungsional","2 ovum fungsional","3 ovum fungsional"],"Pembagian sitoplasma tidak merata sehingga hanya satu sel menjadi ovum; lainnya menjadi badan kutub."],
+["Hasil meiosis I pada spermatogenesis adalah ...","2 spermatosit sekunder (n = 23)",["4 spermatid","2 spermatosit primer","1 spermatogonium"],"Spermatosit primer (2n) membelah meiosis I menjadi dua spermatosit sekunder (n)."],
+["Bagian sperma yang berisi enzim untuk menembus lapisan sel telur adalah ...","Akrosom",["Ekor","Bagian tengah","Sentrosom"],"Akrosom di ujung kepala mengandung enzim penembus."],
+["Mitokondria sperma terdapat di bagian ...","Tengah",["Kepala","Akrosom","Ekor"],"Bagian tengah kaya mitokondria sebagai penghasil energi."],
+["Mengapa terbentuk badan kutub pada oogenesis?","Sitoplasma terbagi tidak merata",["Sel mati karena kekurangan nutrisi","Kromosom hilang","Terjadi fertilisasi"],"Satu sel mendapat hampir semua sitoplasma, sel lain berukuran kecil dan disebut badan kutub."],
+["Oogenesis berlangsung di ...","Folikel di ovarium",["Tubulus seminiferus","Rahim","Vagina"],"Sel telur berkembang di dalam folikel pada ovarium."],
+["Oogonium memperbanyak diri melalui ...","Mitosis",["Meiosis I","Meiosis II","Fertilisasi"],"Oogonium (2n) membelah mitosis sebelum menjadi oosit primer."],
+["Hasil peleburan sperma dan ovum adalah ...","Zigot diploid (2n = 46)",["Zigot haploid (n = 23)","Ootid","Spermatid"],"23 + 23 = 46, yaitu n + n = 2n."],
+["Hasil meiosis II pada oogenesis adalah ...","Ootid dan badan kutub",["Oosit primer","Oogonium","Dua ovum"],"Oosit sekunder membelah menjadi ootid yang berkembang menjadi ovum, serta badan kutub."],
+["Spermatid menjadi spermatozoa melalui ...","Pematangan bentuk",["Meiosis III","Mitosis","Fertilisasi"],"Spermatid (n) mengalami pematangan menjadi sel sperma berekor."],
+["Simbol untuk sel haploid adalah ...","n",["2n","3n","4n"],"Haploid = n (satu set kromosom), diploid = 2n."]];
+let qs,qn,lv,st;
+function quiz(){qs=sh(Q).slice(0,10);qn=0;lv=3;st=0;qshow()}
+function qshow(){const[q,a,w]=qs[qn],o=sh([a,...w]);
+ H(hdr()+`<div class=bar><span>Soal ${qn+1}/10</span><span>${'❤️'.repeat(lv)}</span><span>🔥 ${st}</span></div><h2>${q}</h2>`+o.map(x=>`<button class=o data-a="${x==a?1:0}">${x}</button>`).join('')+'<div id=fb></div>');
+ document.querySelectorAll('.o').forEach(b=>b.onclick=()=>{const ok=b.dataset.a==1;
+  document.querySelectorAll('.o').forEach(x=>{x.disabled=true;if(x.dataset.a==1)x.classList.add('good')});
+  if(ok){st++;add(10+Math.min(st,5)*2)}else{b.classList.add('bad');st=0;lv--}
+  $('#fb').innerHTML=`<p class="fb ${ok?'good':'bad'}">${ok?'Benar! ':'Kurang tepat. '}${qs[qn][3]}</p><button class=n onclick=qnext()>${qn==9||lv==0?'Lihat hasil':'Lanjut ›'}</button>`})}
+function qnext(){if(qn==9||lv==0)return endScr(lv?'Kuis selesai! 🎉':'Nyawa habis 💔',`Total bintang: ${xp}. Terus berlatih!`,'quiz()');qn++;qshow()}
+
+/* ---- SUSUN TAHAPAN ---- */
+const O={Spermatogenesis:[["Spermatogonium","2n = 46"],["Spermatosit primer","2n = 46"],["Spermatosit sekunder (2 sel)","n = 23"],["Spermatid (4 sel)","n = 23"],["Spermatozoa (4 sel)","n = 23"]],
+Oogenesis:[["Oogonium","2n = 46"],["Oosit primer","2n = 46"],["Oosit sekunder + badan kutub","n = 23"],["Ootid + badan kutub","n = 23"],["Ovum","n = 23"]]};
+let oi,op,osh,ores;
+function order(){oi=0;ostart()}
+function ostart(){op=[];ores=null;osh=sh([0,1,2,3,4]);oshow()}
+function oshow(){const n=Object.keys(O)[oi],s=O[n],done=ores==5;
+ H(hdr()+`<h2>Susun urutan ${n}</h2><p class=s>Ketuk tahapan sesuai urutan, dari sel induk sampai gamet. Ketuk yang sudah dipilih untuk membatalkan.</p><ol class=sl>`+
+ [0,1,2,3,4].map(k=>{const x=op[k];return x==null?`<li class=em>${k+1}.</li>`:`<li class="ch ${ores!=null?(x==k?'good':'bad'):''}" ${ores==null?`onclick="orm(${k})"`:''}>${k+1}. ${s[x][0]} <small>${s[x][1]}</small></li>`}).join('')+'</ol>'+
+ (ores==null?'<div>'+osh.filter(x=>!op.includes(x)).map(x=>`<button class=o onclick="opk(${x})">${s[x][0]} <small>${s[x][1]}</small></button>`).join('')+`</div><button class=n ${op.length<5?'disabled':''} onclick=ochk()>Cek jawaban</button>`
+ :`<p class="fb ${done?'good':'bad'}">${done?'Urutan tepat! +25 ⭐':ores+'/5 posisi tepat. Coba lagi ya.'}</p><button class=n onclick="${done?'onext()':'ostart()'}">${done?(oi==1?'Selesai':'Lanjut ›'):'Coba lagi'}</button>`))}
+function opk(x){op.push(x);oshow()}
+function orm(k){op.splice(k,1);oshow()}
+function ochk(){ores=op.filter((x,k)=>x==k).length;if(ores==5)add(25);oshow()}
+function onext(){oi++;if(oi>1)return endScr('Urutan sempurna! 🧬','Kamu menguasai alur spermatogenesis dan oogenesis.','order()');ostart()}
+
+/* ---- JODOHKAN ---- */
+const M=[["Kepala","Mengandung inti sel pembawa kromosom"],["Akrosom","Berisi enzim penembus lapisan sel telur"],["Bagian tengah","Kaya mitokondria penghasil energi"],["Ekor","Membantu sperma bergerak"],["Badan kutub","Sel kecil akibat sitoplasma terbagi tidak merata"],["Tubulus seminiferus","Tempat spermatogenesis di testis"],["Folikel","Tempat oogenesis di ovarium"],["Zigot","Hasil fertilisasi, diploid 2n = 46"],["Meiosis","Pembelahan yang menurunkan kromosom menjadi separuh"]];
+let mp,ml,mr,ms,mm,md;
+function match(){mp=sh(M).slice(0,5);ml=sh([0,1,2,3,4]);mr=sh([0,1,2,3,4]);ms=null;mm=0;md=[];mshow()}
+function mshow(){H(hdr()+`<h2>Jodohkan istilah</h2><p class=s>Ketuk istilah di kiri, lalu pasangannya di kanan. Salah: ${mm}</p><div class=mc><div>`+
+ ml.map(i=>`<button class="o ${md.includes(i)?'good':ms===i?'sel':''}" ${md.includes(i)?'disabled':''} onclick="m1(${i})">${mp[i][0]}</button>`).join('')+'</div><div>'+
+ mr.map(i=>`<button class="o ${md.includes(i)?'good':''}" ${md.includes(i)?'disabled':''} onclick="m2(${i})">${mp[i][1]}</button>`).join('')+'</div></div>')}
+function m1(i){ms=i;mshow()}
+function m2(i){if(ms==null)return;if(ms==i){md.push(i);ms=null;add(10);if(md.length==5){add(Math.max(0,10-mm*2));return endScr('Semua cocok! 🔗',`Kesalahan: ${mm}. Total bintang: ${xp}.`,'match()')}}else{mm++;ms=null}mshow()}
+/* ---- GALERI 3D ---- */
+const Y=0xffd54f,P=0xff7ab6,G3=0x7ee787,PB=0xc9a0b4,seen=new Set;
+let rend,scn,cam,grp,bt=0,auto=true,rx=.2,ry=0;
+const GL=[
+{n:"Spermatogonium",p:"2n = 46",w:"Tubulus seminiferus",t:"Sel induk sperma. Ia tumbuh dan berkembang menjadi spermatosit primer.",f:"Dari sel inilah semua sperma bermula!",m:{n:1,c:0x4fc3f7,k:6}},
+{n:"Spermatosit primer",p:"2n = 46",w:"Tubulus seminiferus",t:"Sel yang berkembang dan memasuki meiosis I.",f:"Ukurannya sedikit lebih besar daripada sel induknya.",m:{n:1,c:0x4fc3f7,k:6,s:1.15}},
+{n:"Spermatosit sekunder",p:"n = 23",w:"Tubulus seminiferus",t:"Dua sel hasil meiosis I. Jumlah kromosomnya tinggal separuh.",f:"Dua bersaudara yang siap meiosis II!",m:{n:2,c:0x4dd0e1,k:3}},
+{n:"Spermatid",p:"n = 23",w:"Tubulus seminiferus",t:"Empat sel hasil meiosis II. Masih bulat dan belum berekor.",f:"Empat serangkai yang sebentar lagi punya ekor.",m:{n:4,c:0x80deea,k:3}},
+{n:"Spermatozoa",p:"n = 23",w:"Tubulus seminiferus",t:"Sperma matang dengan kepala, akrosom, bagian tengah, dan ekor.",f:"Ekornya bergoyang untuk berenang menuju sel telur!",m:{y:'sperm'}},
+{n:"Oogonium",p:"2n = 46",w:"Ovarium",t:"Sel induk telur yang membelah secara mitosis.",f:"Si calon sel telur masih kecil dan imut.",m:{n:1,c:0xff8fb1,k:6}},
+{n:"Oosit primer",p:"2n = 46",w:"Folikel ovarium",t:"Sel yang tumbuh dalam folikel dan mengalami meiosis I.",f:"Bola bening di sekelilingnya melambangkan folikel.",m:{n:1,c:0xff8fb1,k:6,s:1.2,fol:1}},
+{n:"Oosit sekunder",p:"n = 23",w:"Folikel ovarium",t:"Hasil meiosis I. Sitoplasma terbagi tidak merata sehingga terbentuk badan kutub yang kecil.",f:"Sel mungil di sampingnya adalah badan kutub.",m:{n:1,c:0xff8fb1,k:3,pb:1}},
+{n:"Ootid",p:"n = 23",w:"Folikel ovarium",t:"Hasil meiosis II, disertai badan kutub. Selanjutnya berkembang menjadi ovum.",f:"Hampir seluruh sitoplasma dipegang oleh ootid.",m:{n:1,c:0xff8fb1,k:3,pb:3}},
+{n:"Ovum",p:"n = 23",w:"Ovarium",t:"Sel telur matang yang siap dibuahi. Satu oogonium hanya menghasilkan satu ovum fungsional.",f:"Lapisan transparan di sekelilingnya melindungi sel telur.",m:{y:'ovum'}},
+{n:"Zigot",p:"2n = 46",w:"Hasil fertilisasi",t:"Sel pertama hasil peleburan sperma dan ovum: 23 + 23 = 46 kromosom.",f:"Separuh kromosomnya dari sperma, separuhnya dari sel telur.",m:{y:'zyg'}}];
+const RD=`<details open><summary>Apa itu gametogenesis?</summary><p>Proses pembentukan dan pematangan gamet (sel reproduksi). Ada dua jalur: <b>spermatogenesis</b> menghasilkan sperma dan <b>oogenesis</b> menghasilkan sel telur. Tujuannya menghasilkan sel haploid yang siap untuk fertilisasi.</p></details>
+<details><summary>Diploid (2n) dan haploid (n)</summary><p>Sel diploid punya dua set kromosom, sel haploid hanya satu set. Pada manusia, sel tubuh berisi 46 kromosom (2n), sedangkan gamet berisi 23 (n). Meiosis mengurangi jumlah kromosom menjadi separuh.</p></details>
+<details><summary>Spermatogenesis vs oogenesis</summary><table><tr><th></th><th>Spermatogenesis</th><th>Oogenesis</th></tr><tr><td>Tempat</td><td>Tubulus seminiferus, testis</td><td>Folikel, ovarium</td></tr><tr><td>Sel induk</td><td>Spermatogonium</td><td>Oogonium (mitosis)</td></tr><tr><td>Hasil akhir</td><td>4 spermatozoa</td><td>1 ovum + badan kutub</td></tr><tr><td>Sitoplasma</td><td>Terbagi sama</td><td>Terbagi tidak merata</td></tr></table></details>
+<details><summary>Struktur sperma</summary><p><b>Kepala</b>: inti sel pembawa kromosom. <b>Akrosom</b>: enzim penembus lapisan sel telur. <b>Bagian tengah</b>: mitokondria penghasil energi. <b>Ekor</b>: membantu bergerak.</p></details>
+<details><summary>Fertilisasi</summary><p>Sperma (n = 23) bertemu ovum (n = 23), lalu materi genetiknya bergabung membentuk zigot diploid (2n = 46). Rumus ringkasnya: n + n = 2n.</p></details>`;
+const mat=(c,o=1)=>new THREE.MeshStandardMaterial({color:c,roughness:.35,transparent:o<1,opacity:o});
+const sph=(r,c,o=1,x=1,y=1,z=1)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),mat(c,o));m.scale.set(x,y,z);return m};
+const xchr=(c,s)=>{const g=new THREE.Group();[.5,-.5].forEach(a=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(.09*s,.09*s,.7*s,8),mat(c));m.rotation.z=a;g.add(m)});return g};
+function face(r){const g=new THREE.Group();[-1,1].forEach(x=>{const e=sph(r*.17,0xffffff);e.position.set(x*r*.3,r*.15,r*.9);const p=sph(r*.09,0x111111);p.position.set(x*r*.3,r*.15,r*1.03);const b=sph(r*.12,0xff6f91,.7,1,.6,.3);b.position.set(x*r*.55,-r*.12,r*.84);g.add(e,p,b)});const s=new THREE.Mesh(new THREE.TorusGeometry(r*.14,r*.03,8,16,Math.PI),mat(0x331122));s.rotation.z=Math.PI;s.position.set(0,-r*.05,r*.97);g.add(s);return g}
+function cellM(r,c,cols){const g=new THREE.Group();g.add(sph(r,c,.55),face(r));cols.forEach((k,i)=>{const a=i*2.2,x=xchr(k,r*.8);x.position.set(Math.cos(a)*r*.5,Math.sin(a)*r*.4-r*.05,-r*.3);x.rotation.set(i,i*.7,i);g.add(x)});return g}
+function build(m){const g=new THREE.Group(),tl=[];
+ if(m.y=='sperm'){g.add(sph(.9,0x4fc3f7,1,1.15,1,.85));const a=sph(.55,0xffe082,1,.8,1,.9);a.position.x=-.78;g.add(a);const f=face(.75);f.position.x=-.1;g.add(f);
+  const md=new THREE.Mesh(new THREE.CylinderGeometry(.26,.2,.9,12),mat(0xffb454));md.rotation.z=Math.PI/2;md.position.x=1.4;g.add(md);
+  for(let i=0;i<22;i++){const s=sph(.17-i*.005,0x7fd8ff);s.position.x=1.9+i*.22;g.add(s);tl.push(s)}
+  g.children.forEach(c=>c.position.x-=2.7)}
+ else if(m.y=='ovum'){g.add(cellM(1.3,0xff8fb1,[Y,P,G3]),sph(1.6,0xffe0ec,.2));for(let i=0;i<30;i++){const y=1-i/14.5,r=Math.sqrt(1-y*y),t=i*2.4,d=sph(.09,0xffc2d6);d.position.set(Math.cos(t)*r*1.6,y*1.6,Math.sin(t)*r*1.6);g.add(d)}}
+ else if(m.y=='zyg')g.add(cellM(1.4,0xb388ff,[Y,P,G3,0x4fc3f7,0xff9ec1,0xa5ff8a]));
+ else{const n=m.n,r=(m.s||1)*(n==1?1.5:n==2?1.1:.8),ps={1:[[0,0]],2:[[-1.25,0],[1.25,0]],4:[[-.95,.95],[.95,.95],[-.95,-.95],[.95,-.95]]}[n],cols=m.k==6?[Y,P,G3,Y,P,G3]:[Y,P,G3];
+  ps.forEach(p=>{const c=cellM(r,m.c,cols);c.position.set(p[0],p[1],0);g.add(c)});
+  if(m.fol)g.add(sph(r*1.45,0xffd6e4,.14));
+  for(let i=0;i<(m.pb||0);i++){const p=[[.95,.85],[1.2,.1],[1.05,-.65]][i],b=sph(r*.2,PB);b.position.set(p[0]*r,p[1]*r,0);g.add(b)}
+  if(m.pb)g.children.forEach(c=>c.position.x-=r*.3)}
+ g.userData.tl=tl;return g}
+function boing(){bt=0;const b=$('#bo');b.textContent=['Boing!','Hehe 😄','Wiii!','Geli~ 🥰','Halo! 👋'][Math.floor(Math.random()*5)];b.classList.remove('go');void b.offsetWidth;b.classList.add('go')}
+function init3d(){const cv=$('#cv');grp=null;bt=0;rend=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});rend.setPixelRatio(Math.min(2,devicePixelRatio||1));const w=cv.clientWidth||600;rend.setSize(w,w*.75,false);
+ scn=new THREE.Scene();cam=new THREE.PerspectiveCamera(40,4/3,.1,100);cam.position.z=9;
+ scn.add(new THREE.AmbientLight(0xffffff,.75));const d=new THREE.DirectionalLight(0xffffff,.9);d.position.set(3,5,6);scn.add(d);const q=new THREE.PointLight(0x88ccff,.8);q.position.set(-5,-2,4);scn.add(q);
+ let dr=null;const rc=new THREE.Raycaster(),R=rend;
+ cv.onpointerdown=e=>{dr={x:e.clientX,y:e.clientY,m:0};try{cv.setPointerCapture(e.pointerId)}catch(x){}};
+ cv.onpointermove=e=>{if(!dr)return;const dx=e.clientX-dr.x,dy=e.clientY-dr.y;dr.x=e.clientX;dr.y=e.clientY;dr.m+=Math.abs(dx)+Math.abs(dy);ry+=dx*.01;rx=Math.max(-1.2,Math.min(1.2,rx+dy*.01))};
+ cv.onpointerup=e=>{if(dr&&dr.m<6){const r=cv.getBoundingClientRect();rc.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),cam);if(grp&&rc.intersectObject(grp,true).length)boing()}dr=null};
+ (function lp(t){if(!cv.isConnected){R.dispose();return}requestAnimationFrame(lp);
+  if(grp){if(auto&&!dr)ry+=.006;bt+=.016;grp.rotation.set(rx,ry,0);grp.scale.setScalar(1+Math.exp(-bt*4)*.22*Math.sin(bt*18));grp.position.y=Math.sin(t*.002)*.15;(grp.userData.tl||[]).forEach((m,i)=>m.position.y=Math.sin(i*.5-t*.008)*(.05+i*.02))}
+  R.render(scn,cam)})(0)}
+function gsel(i){const x=GL[i];GL.forEach((_,k)=>{const b=$('#ch'+k);if(b)b.classList.toggle('on',k==i)});
+ if(!seen.has(i)){seen.add(i);add(3)}
+ $('#col').textContent=seen.size+'/'+GL.length+' sel';
+ $('#info').innerHTML=`<h2 style="margin:0 0 6px">${x.n}</h2><span class=tag>${x.p}</span><span class=tag>📍 ${x.w}</span><p>${x.t}</p><p class=s>💡 ${x.f}</p>`;
+ try{$('#ch'+i).scrollIntoView({inline:'center',block:'nearest'})}catch(e){}
+ if(scn){if(grp)scn.remove(grp);grp=build(x.m);scn.add(grp);bt=0;rx=.2;ry=0}}
+function gal(){auto=true;
+ H(hdr()+`<h1>Galeri Sel 3D</h1><p class=s>Koleksi: <b id=col></b>. Seret untuk memutar, ketuk sel biar "boing"!</p><div class=gv><canvas id=cv></canvas><span id=bo class=bo></span></div><div class=chips>`+GL.map((x,i)=>`<button class=chip id=ch${i} onclick=gsel(${i})>${x.n}</button>`).join('')+`</div><div class=card id=info></div><label class=tg><input type=checkbox checked onchange="auto=this.checked"> Putar otomatis</label><h2>📖 Bacaan Singkat</h2>`+RD);
+ scn=null;
+ try{if(typeof THREE=='undefined')throw 0;init3d()}catch(e){$('.gv').innerHTML='<p class=s style="padding:20px">Tampilan 3D tidak dapat dimuat di perangkat ini. Kamu tetap bisa membaca info sel di bawah.</p>'}
+ gsel(0)}
+home();
+</script></body></html>
